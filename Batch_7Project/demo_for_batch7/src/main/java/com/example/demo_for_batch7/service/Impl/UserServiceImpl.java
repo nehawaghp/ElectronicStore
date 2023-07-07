@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepo userRepo;
 
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto){
 
-        LOGGER.info("Inside createUser()");
+        LOGGER.info("Inside createUser()" + userDto);
         String userId = UUID.randomUUID().toString();
         LOGGER.info("Generate unique Id: "+ userId);
         userDto.setUserId(userId);
