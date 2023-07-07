@@ -27,9 +27,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto){
 
-        LOGGER.info("Inside createUser()" + userDto);
+        LOGGER.info("Initiating request to create user");
         String userId = UUID.randomUUID().toString();
-        LOGGER.info("Generate unique Id: "+ userId);
+        LOGGER.info("Completed request  of create user");
+
         userDto.setUserId(userId);
 
         // dto -> entity
@@ -46,63 +47,62 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userDto, String userId){
 
-        LOGGER.info("Inside updateUser() with User Id "+userId);
+        LOGGER.info("Initiating request to update userID");
         User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found With ID"));
         user.setName(userDto.getName());
         user.setAbout(userDto.getAbout());
         user.setGender(userDto.getGender());
         user.setPassword(userDto.getPassword());
         user.setImageName(userDto.getImageName());
-        LOGGER.info("Updated User: "+user);
         User updatedUser = userRepo.save(user);
         UserDto updatedDto = entityToDto(updatedUser);
-        LOGGER.info("User updated successfully "+updatedDto);
+        LOGGER.info("Completed request of update user ");
         return updatedDto;
     }
 
     @Override
     public void deleteUser(String userId){
 
-        LOGGER.info("Inside deleteUser() with id "+userId);
+        LOGGER.info("Initiating  request to delete user Id");
         User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found With given Id"));
         userRepo.delete(user);
-        LOGGER.info("Deleted User: "+user);
+        LOGGER.info("Completed request of delete userId" );
     }
 
     @Override
     public List<UserDto> getAllUser(){
 
-        LOGGER.info("Inside getAllUser");
+        LOGGER.info("Initiating  request to  getAllUser" );
         List<User> users = userRepo.findAll();
         List<UserDto> dtoList = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
-        LOGGER.info("List Of User: "+dtoList);
+        LOGGER.info("Completed request to getAllUser");
         return dtoList;
     }
 
     @Override
     public UserDto getUserById(String userId){
 
-        LOGGER.info("Inside getUserById() with User Id: "+userId);
+        LOGGER.info("Initiating request to getUserByID ");
         User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found with Given Id"));
-        LOGGER.info("User with Id: "+user);
+        LOGGER.info("Completed request to getUserByID");
         return entityToDto(user);
     }
 
     @Override
     public UserDto getUserByEmail(String email){
 
-        LOGGER.info("Inside getUserByEmail() with Email: "+email);
+        LOGGER.info("Initiating request to getUserByEmail");
         User user = userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User Not Found With Given Email Id And Password"));
-        LOGGER.info("User By email: "+user);
+        LOGGER.info("Completed request to getUserByEmail");
         return entityToDto(user);
     }
 
     @Override
     public List<UserDto> searchUser(String keyword){
-        LOGGER.info("Inside searchUser() with keyword: "+keyword);
+        LOGGER.info("Initiating request to searchUser");
         List<User> users = userRepo.findByNameContaining(keyword);
         List<UserDto> dtoList = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
-        LOGGER.info("User details :"+dtoList);
+        LOGGER.info("Completed request to searchUser");
         return dtoList;
     }
     private UserDto entityToDto(User savedUser) {

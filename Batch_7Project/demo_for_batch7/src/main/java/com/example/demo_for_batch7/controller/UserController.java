@@ -25,18 +25,18 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<UserDto>createUser(@RequestBody UserDto userDto)
     {
-        LOGGER.info("Inside createUser()"+ userDto);
+        LOGGER.info("Initiating request to create user");
         UserDto user = userService.createUser(userDto);
-        LOGGER.info("User Created "+user);
+        LOGGER.info("Completed request to create user");
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
 
     @PutMapping("/{userId}")
     public ResponseEntity<UserDto>updateUser(@PathVariable("userId")String userId,@RequestBody UserDto userDto){
-        LOGGER.info("Inside updateUser() with User Id: "+userId);
+        LOGGER.info("Initiating request to update userID");
         UserDto updatedUserDto = userService.updateUser(userDto, userId);
-        LOGGER.info("Saving User "+updatedUserDto);
+        LOGGER.info("Completed request of update user");
         return new ResponseEntity<>(updatedUserDto, HttpStatus.OK);
     }
 
@@ -44,7 +44,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponseMessage>deleteUser(@PathVariable("userId") String userId){
 
-        LOGGER.info("Inside deleteUser() with Id: "+userId);
+        LOGGER.info("Initiating  request to delete userId");
         userService.deleteUser(userId);
         ApiResponseMessage message = ApiResponseMessage
                 .builder()
@@ -52,37 +52,36 @@ public class UserController {
                 .success(true)
                 .status(HttpStatus.OK)
                 .build();
-        LOGGER.info("User Deleted With User Id: "+userId);
+        LOGGER.info("Completed request of delete userId");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 
     @GetMapping("/")
     public ResponseEntity<List<UserDto>>getAllUsers(){
-
-        LOGGER.info("Inside getALlUsers()");
+        LOGGER.info("Initiating  request to  getAllUse");
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUsers(String userId){
-
-        LOGGER.info("Inside getUsers()");
+    public ResponseEntity<UserDto> getUsers( @PathVariable
+                                                         String userId){
+        LOGGER.info("Initiating request to getUsers");
         return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
 
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email){
-        LOGGER.info("Inside getUserByEmail() "+email);
+        LOGGER.info("Initiating request to getUserByEmail");
         return new ResponseEntity<>(userService.getUserById(email), HttpStatus.OK);
     }
 
 
     @GetMapping("/search/{keyword}")
     public ResponseEntity<UserDto> searchUser(@PathVariable String keywords){
-        LOGGER.info("Inside searchUser() "+keywords);
+        LOGGER.info("Initiating request to searchUser");
         return new ResponseEntity(userService.searchUser(keywords), HttpStatus.OK);
     }
 }
