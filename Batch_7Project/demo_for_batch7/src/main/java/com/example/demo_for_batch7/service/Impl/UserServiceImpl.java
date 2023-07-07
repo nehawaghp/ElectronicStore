@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper mapper;
 
-    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(UserServiceImpl.class);
+    private  static  final  Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     @Override
     public UserDto createUser(UserDto userDto){
 
