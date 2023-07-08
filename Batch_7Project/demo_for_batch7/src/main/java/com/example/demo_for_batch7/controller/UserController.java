@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class UserController {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(UserController.class);
     @PostMapping("/")
-    public ResponseEntity<UserDto>createUser(@RequestBody UserDto userDto)
+    public ResponseEntity<UserDto>createUser(@Validated @RequestBody UserDto userDto)
     {
         LOGGER.info("Initiating request to create user");
         UserDto user = userService.createUser(userDto);

@@ -2,6 +2,7 @@ package com.example.demo_for_batch7.service.Impl;
 
 import com.example.demo_for_batch7.dtos.UserDto;
 import com.example.demo_for_batch7.entity.User;
+import com.example.demo_for_batch7.exception.ResourceNotFoundException;
 import com.example.demo_for_batch7.repository.UserRepo;
 import com.example.demo_for_batch7.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto, String userId){
 
         LOGGER.info("Initiating request to update userID");
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found With ID"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found With given Id"));
         user.setName(userDto.getName());
         user.setAbout(userDto.getAbout());
         user.setGender(userDto.getGender());
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String userId){
 
         LOGGER.info("Initiating  request to delete user Id");
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found With given Id"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found With given Id"));
         userRepo.delete(user);
         LOGGER.info("Completed request of delete userId" );
     }
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(String userId){
 
         LOGGER.info("Initiating request to getUserByID ");
-        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User Not Found with Given Id"));
+        User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not Found with Given Id"));
         LOGGER.info("Completed request to getUserByID");
         return entityToDto(user);
     }
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByEmail(String email){
 
         LOGGER.info("Initiating request to getUserByEmail");
-        User user = userRepo.findByEmail(email).orElseThrow(() -> new RuntimeException("User Not Found With Given Email Id And Password"));
+        User user = userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User Not Found With Given Email Id And Password"));
         LOGGER.info("Completed request to getUserByEmail");
         return entityToDto(user);
     }
@@ -106,25 +107,25 @@ public class UserServiceImpl implements UserService {
         return dtoList;
     }
     private UserDto entityToDto(User savedUser) {
-        UserDto userDto = UserDto.builder()
-                .userId(savedUser.getUserId())
-                .name(savedUser.getName())
-                .email(savedUser.getEmail())
-                .password(savedUser.getPassword())
-                .about(savedUser.getAbout())
-                .gender(savedUser.getGender())
-                .imageName(savedUser.getImageName()).build();
+//        UserDto userDto = UserDto.builder()
+//                .userId(savedUser.getUserId())
+//                .name(savedUser.getName())
+//                .email(savedUser.getEmail())
+//                .password(savedUser.getPassword())
+//                .about(savedUser.getAbout())
+//                .gender(savedUser.getGender())
+//                .imageName(savedUser.getImageName()).build();
         return mapper.map(savedUser,UserDto.class);
     }
 
     private User dtoToEntity(UserDto userDto) {
-        User user = User.builder()
-                .name(userDto.getName())
-                .userId(userDto.getUserId())
-                .email(userDto.getEmail())
-                .password(userDto.getPassword())
-               .about(userDto.getGender())
-                .gender(userDto.getGender()).build();
+//        User user = User.builder()
+//                .name(userDto.getName())
+//                .userId(userDto.getUserId())
+//                .email(userDto.getEmail())
+//                .password(userDto.getPassword())
+//               .about(userDto.getGender())
+//                .gender(userDto.getGender()).build();
         return mapper.map(userDto,User.class);
     }
 }
