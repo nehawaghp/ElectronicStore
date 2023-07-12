@@ -16,6 +16,6 @@ public @interface ImageNameValid {
     //Represent group of constrains
     Class<?>[] groups() default {};
 
-    //Additional information about annatation
+    //Additional information about annotation
     Class<? extends Payload>[] payload()default {};
 }
