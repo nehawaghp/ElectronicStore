@@ -12,12 +12,18 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,16 +37,21 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ModelMapper mapper;
 
+    @Value("${user.profile.image.path}")
+    private String imagepath;
+
     private  static  final  Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    public UserServiceImpl() {
+    }
+
     @Override
     public UserDto createUser(UserDto userDto){
 
         LOGGER.info("Initiating request to create user");
         String userId = UUID.randomUUID().toString();
         LOGGER.info("Completed request  of create user");
-
         userDto.setUserId(userId);
-
         // dto -> entity
         User user = dtoToEntity(userDto);
         LOGGER.info("Saving the User: "+user);
@@ -54,7 +65,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto, String userId){
-
         LOGGER.info("Initiating request to update userID");
         User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstant.USER_NOT_FOUND));
         user.setName(userDto.getName());
@@ -69,12 +79,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String userId){
-
+    public void deleteUser(String userId) {
         LOGGER.info("Initiating  request to delete user Id");
         User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstant.USER_NOT_FOUND));
         userRepo.delete(user);
-        LOGGER.info("Completed request of delete userId" );
+        LOGGER.info("Completed request of delete userId");
+
+        //delete user profile image
+        // images/user/abc.png
+        String fullPath = imagepath + user.getImageName();
+       try{
+           Path path = Paths.get(fullPath);
+           Files.delete(path);
+       } catch (NoSuchFileException ex) {
+       }catch (IOException e){
+           throw new RuntimeException(e);
+       }
+       //delete user
+        userRepo.delete(user);
     }
 
     @Override
@@ -84,7 +106,6 @@ public class UserServiceImpl implements UserService {
         // pageNumber default start fom 0
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, sort );
         Page<User> page = userRepo.findAll(pageable);
-
          PageableResponse<UserDto> response = Helper.getPageableResponse(page, UserDto.class);
         List<User> users = page.getContent();
         LOGGER.info("Initiating  request to  getAllUser" );
@@ -95,7 +116,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(String userId){
-
         LOGGER.info("Initiating request to getUserByID ");
         User user = userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstant.USER_NOT_FOUND));
         LOGGER.info("Completed request to getUserByID");
@@ -104,7 +124,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByEmail(String email){
-
         LOGGER.info("Initiating request to getUserByEmail");
         User user = userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(AppConstant.Email_NOT_FOUND));
         LOGGER.info("Completed request to getUserByEmail");
